@@ -11,7 +11,8 @@ import {
   Clipboard,
   TextInput,
   KeyboardAvoidingView,
-  AsyncStorage
+  AsyncStorage,
+  Linking
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Audio } from "expo-av";
@@ -987,22 +988,25 @@ class Home extends Component {
     this.PlaySound();
     this.setState({
       finishedCost: lol,
-      Page: "finished"
-    });
-  };
-  _FinishTrip = () => {
-    this.setState({
-      mainCounter: 0
-    });
-    this.PlaySound();
-    this.state.DriverLocationInterval.map(item => {
-      clearInterval(item);
-    });
-    this.setState({
       Page: "finish"
     });
-    this.props.Status(true);
-    console.log("line 911");
+  };
+  _FinishTrip = data => {
+    if (data.url) {
+      Linking.openURL(data.url);
+    } else {
+      this.setState({
+        mainCounter: 0
+      });
+      this.PlaySound();
+      this.state.DriverLocationInterval.map(item => {
+        clearInterval(item);
+      });
+      this.setState({
+        Page: "finish"
+      });
+      this.props.Status(true);
+    }
   };
   getFavorites = () => {
     if (this.state.Token && this.state.passenger_id !== null) {
@@ -1042,8 +1046,8 @@ class Home extends Component {
       Region: {
         latitude: parseFloat(region.latitude),
         longitude: parseFloat(region.longitude),
-        latitudeDelta: region.latitudeDelta ? region.latitudeDelta : 0.0040 ,
-        longitudeDelta: region.longitudeDelta ? region.longitudeDelta : 0.0040
+        latitudeDelta: region.latitudeDelta ? region.latitudeDelta : 0.004,
+        longitudeDelta: region.longitudeDelta ? region.longitudeDelta : 0.004
       }
     });
     this.SendLocationToRecieveDrivers();
@@ -1253,6 +1257,15 @@ class Home extends Component {
         return counter;
       }
     }
+  };
+  PayTrip = () => {
+    Linking.openURL(
+      `http://panel.taximasir.com/trip/${
+        this.state.TripIdFromServer
+          ? this.state.TripIdFromServer
+          : this.props.oldData.trip_id
+      }/pay`
+    );
   };
   render() {
     switch (this.state.Page) {
@@ -1575,7 +1588,7 @@ class Home extends Component {
                     placeholder="نظر خود را درباره راننده بنویسید"
                     style={[styles.TextInputStyle, { fontFamily: "Medium" }]}
                   />
-                  <Text
+                  {/* <Text
                     style={{
                       color: "#ffffff",
                       fontSize: 14,
@@ -1595,7 +1608,7 @@ class Home extends Component {
                     keyboardType="number-pad"
                     maxLength={2}
                     keyboardAppearance="light"
-                  />
+                  /> */}
                   <TouchableOpacity
                     style={styles.rateSubmitButton}
                     onPress={() => this._FinalizeTrip()}
@@ -1625,7 +1638,7 @@ class Home extends Component {
               ShowMenu={() => this.setState({ Page: "menu" })}
             />
             <MapView
-              style={{ flex: 1 }}
+              style={{ flex: 2 }}
               region={this.state.Region}
               showsMyLocationButton={true}
               showsUserLocation={true}
@@ -1657,13 +1670,31 @@ class Home extends Component {
                 />
               )}
             </MapView>
-            <CarDetail
-              Data={
-                this.state.DriverAcceptedData !== null
-                  ? this.state.DriverAcceptedData
-                  : this.props.oldData
-              }
-            />
+            <View style={{ flex: 3 }}>
+              <CarDetail
+                Data={
+                  this.state.DriverAcceptedData !== null
+                    ? this.state.DriverAcceptedData
+                    : this.props.oldData
+                }
+              />
+              <TouchableOpacity
+                onPress={() => this.PayTrip()}
+                style={{
+                  backgroundColor: "#2a2e43",
+                  width: width - 80,
+                  alignSelf: "center",
+                  borderRadius: 100,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingVertical: 10
+                }}
+              >
+                <Text style={{ fontFamily: "Medium", color: "white" }}>
+                  پرداخت آنلاین
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         );
         break;
