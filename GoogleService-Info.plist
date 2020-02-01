@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>256246422750-37rb4gml3irqm2e3httggaevlohub3a7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.256246422750-37rb4gml3irqm2e3httggaevlohub3a7</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBkKLcpv6sB8-3ppFnXMLGfq8EsjQX2H1g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>256246422750</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.eesssn.vixiPassengers</string>
+	<key>PROJECT_ID</key>
+	<string>vixi-persian</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vixi-persian.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:256246422750:ios:c3bc45e4d54da8c521364f</string>
+	<key>DATABASE_URL</key>
+	<string>https://vixi-persian.firebaseio.com</string>
+</dict>
+</plist>

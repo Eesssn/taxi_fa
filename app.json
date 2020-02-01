@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "taximasir",
+    "slug": "taximasir",
+    "privacy": "public",
+    "owner": "eesssn",
+    "primaryColor": "#ffffff",
+    "updates": {
+      "enabled": false
+    },
+    "notification": {
+      "color": "#ffffff",
+      "iosDisplayInForeground": false,
+      "androidMode": "collapse",
+      "androidCollapsedTitle": "taxi masir Message"
+    },
+    "sdkVersion": "35.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image":"./assets/splash.png",
+      "resizeMode":"contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.eesssn.taximasirPassengers",
+      "config": {
+        "googleMapsApiKey":"AIzaSyBZ2aQnzxcjjvcLjD6I6LEpbuE7kNMbvN4"
+      },
+      "splash": {
+        "backgroundColor": "#2a2e43"
+      }
+    },
+    "android": {
+      "package": "com.eesssn.taximasirPassengers",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBZ2aQnzxcjjvcLjD6I6LEpbuE7kNMbvN4"
+        }
+      }
+    },
+    "description": "Online booking services"
+  }
+}

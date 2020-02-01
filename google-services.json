@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "256246422750",
+    "firebase_url": "https://vixi-persian.firebaseio.com",
+    "project_id": "vixi-persian",
+    "storage_bucket": "vixi-persian.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256246422750:android:736a2d74e3a9499a21364f",
+        "android_client_info": {
+          "package_name": "com.eesssn.vixiDrivers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256246422750-6rml5lmgeb0b828l91sint9ql1onqsc1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuxNjOf9Gff9Cnmz8evveK0QwZk0SM0l0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256246422750-6rml5lmgeb0b828l91sint9ql1onqsc1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "256246422750-ukrafo548usnjcudk0tshpf3ndr4pv2l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eesssn.vixiDrivers"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256246422750:android:0472fd970a24a00821364f",
+        "android_client_info": {
+          "package_name": "com.eesssn.vixiPassengers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256246422750-6rml5lmgeb0b828l91sint9ql1onqsc1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuxNjOf9Gff9Cnmz8evveK0QwZk0SM0l0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256246422750-6rml5lmgeb0b828l91sint9ql1onqsc1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "256246422750-ukrafo548usnjcudk0tshpf3ndr4pv2l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eesssn.vixiDrivers"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
