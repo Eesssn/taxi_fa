@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import LeftMenuView from './LeftMenuView';
 import Settings from './Settings';
-import Transaction from './TransactionActivity';
 import HistoryView from './History';
 import AboutView from './AboutUs';
 import SupportView from './Support';
@@ -28,7 +27,6 @@ class LeftMenu extends Component {
       PrimaryMenu:true,
       showSetting:false,
       showHistory:false,
-      showPayment:false,
       showLogout:false,
       showAbout:false,
       showSupport:false,
@@ -57,26 +55,6 @@ _ChangeView(){
     showAbout:false,
     showSupport:false,
     showReserve:false,
-  })
-}
-
-_Transaction(){
-  var thiss = this;
-  axios.post('passenger/cards',{
-    passenger_id:this.props.PassengerId,
-    token:this.props.Token,
-  }).then(function(response){
-    if(response.data.is_successful){
-      thiss.setState({
-        Cards:response.data.data,
-        showPayment:true,
-        PrimaryMenu:false,
-        showReserve:false,
-      })
-    } else {
-      alert(response.data.message)
-    }
-  }).catch(function(err){
   })
 }
 
@@ -220,19 +198,6 @@ _openUrl(){
         </View>
       )
     }
-    if(this.state.showPayment){
-      return(
-        <View style={styles.secondaryContainer}>
-          <Transaction
-            Name={this.props.Name}
-            ShowMenu={() => this._ChangeView()}
-            Cards={this.state.Cards}
-            Token={this.props.Token}
-            PassengerId={this.props.PassengerId}
-          />
-        </View>
-      )
-    }
     if(this.state.showLogout){
       return(
         <View style={styles.secondaryContainer}>
@@ -268,7 +233,6 @@ _openUrl(){
               fullData={this.props.fullData}
               ImageUrl={this.props.ImageUrl}
               SettingToggle={() => this.toggle()}
-              Transaction={() => this._Transaction()}
               History={() => this._History()}
               Support={() => this._Support()}
               Reserve={() => this._Reserve()}

@@ -11,7 +11,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import DatePicker from "react-native-date-ranges";
 import TimePicker from "react-native-datepicker";
 import axios from "axios";
@@ -30,6 +30,7 @@ class HomeView extends Component {
     this.handleBackButton = this.handleBackButton.bind(this);
     this.state = {
       Page: [],
+      MapType: "standard",
       Page2: null,
       FromAddressMine: null,
       value: null
@@ -200,10 +201,10 @@ class HomeView extends Component {
                   contentText: { fontSize: 13 }
                 }}
                 centerAlign
-                markText={"Choose Date"}
-                ButtonText={"Done"}
+                markText={"انتخاب تاریخ"}
+                ButtonText={"ثبت"}
                 allowFontScaling={false}
-                placeholder={"Select Date"}
+                placeholder={"انتخاب تاریخ"}
                 selectedBgColor="#2a2e43"
                 selectedTextColor="white"
                 blockBefore={true}
@@ -215,10 +216,10 @@ class HomeView extends Component {
                 showIcon={false}
                 is24Hour={false}
                 mode="time"
-                placeholder="select Time"
+                placeholder="انتخاب زمان"
                 format="LT"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
+                confirmBtnText="ثبت"
+                cancelBtnText="لغو"
                 customStyles={{
                   dateIcon: {
                     position: "absolute",
@@ -245,7 +246,6 @@ class HomeView extends Component {
             </View>
           </View>
         );
-        break;
       case "reservation":
         return (
           <View style={styles.Container}>
@@ -274,7 +274,6 @@ class HomeView extends Component {
             />
           </View>
         );
-        break;
       case "note":
         return (
           <View style={styles.Container}>
@@ -304,7 +303,6 @@ class HomeView extends Component {
             />
           </View>
         );
-        break;
       case "promo":
         if (this.props.voucherStatus) {
           setTimeout(() => {
@@ -339,7 +337,6 @@ class HomeView extends Component {
             />
           </View>
         );
-        break;
       case "taxiType":
         return (
           <View style={styles.Container}>
@@ -360,8 +357,8 @@ class HomeView extends Component {
                 longitude: parseFloat(
                   this.props.DestinationCoordinates.longitude
                 ),
-                latitudeDelta: this.props.Region.latitudeDelta,
-                longitudeDelta: this.props.Region.longitudeDelta
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01
               }}
             >
               <Marker
@@ -384,6 +381,20 @@ class HomeView extends Component {
                   )
                 }}
               />
+              <Polyline
+                coordinates={[
+                  {
+                    latitude: this.props.OriginCoordinates.latitude,
+                    longitude: this.props.OriginCoordinates.longitude
+                  },
+                  {
+                    latitude: this.props.DestinationCoordinates.latitude,
+                    longitude: this.props.DestinationCoordinates.longitude
+                  }
+                ]}
+                strokeColor="#000"
+                strokeWidth={3}
+              />
             </MapView>
             <ChooseTaxiType
               voucherStatus={this.props.voucherStatus}
@@ -402,7 +413,6 @@ class HomeView extends Component {
             />
           </View>
         );
-        break;
       case "selectDestination":
         console.log("Region is : ", this.props.Region);
         console.log("Region 2 is : ", this.props.Region2);
@@ -459,6 +469,8 @@ class HomeView extends Component {
                 }}
                 style={{ width: width, height: height - 70, padding: 0 }}
                 showsBuildings={true}
+                showsBuildings={true}
+                mapType={this.state.MapType}
                 showsMyLocationButton={true}
                 showsCompass={true}
                 toolbarEnabled={true}
@@ -497,6 +509,26 @@ class HomeView extends Component {
               <ActivityIndicator size="large" color="blue" />
             )}
             <TouchableOpacity
+              onPress={() =>
+                this.setState({
+                  MapType:
+                    this.state.MapType === "standard" ? "hybrid" : "standard"
+                })
+              }
+              style={{
+                position: "absolute",
+                borderColor: "gray",
+                borderWidth: 0.5,
+                bottom: 50,
+                left: 0,
+                backgroundColor: "white",
+                padding: 10,
+                borderRadius: 10
+              }}
+            >
+              <Text style={{ fontFamily: "Medium" }}>تغییر نوع نقشه</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() => this._setDestinationMarker()}
               style={styles.OriginSelectorContainer}
             >
@@ -508,7 +540,6 @@ class HomeView extends Component {
             {/* <OrderType Places={() => this.setState({ Page: [...this.state.Page, "places"] })} title="جستجو مقصد" /> */}
           </View>
         );
-        break;
       // case 'places':
       //     let array = this.props.Favorite
       //     let lol = {
@@ -685,7 +716,6 @@ class HomeView extends Component {
             />
           </View>
         );
-        break;
       default:
         return (
           <View style={styles.Container}>
@@ -732,7 +762,10 @@ class HomeView extends Component {
               initialRegion={this.props.Region2}
               style={{ width: width, height: height - 70, padding: 0 }}
               showsBuildings={true}
+              mapType={this.state.MapType}
               showsMyLocationButton={true}
+              showsBuildings={true}
+              showsIndoors={true}
               showsCompass={true}
               toolbarEnabled={true}
               loadingEnabled={true}
@@ -750,6 +783,26 @@ class HomeView extends Component {
             </MapView>
             {/* <OrderType Favorite={this.props.Favorite} Places={() => this.setState({ Page: [...this.state.Page, "OriginPlaces"] })} title="جستجو مبدا؟" /> */}
             <TouchableOpacity
+              onPress={() =>
+                this.setState({
+                  MapType:
+                    this.state.MapType === "standard" ? "hybrid" : "standard"
+                })
+              }
+              style={{
+                position: "absolute",
+                borderColor: "gray",
+                borderWidth: 0.5,
+                bottom: 50,
+                left: 0,
+                backgroundColor: "white",
+                padding: 10,
+                borderRadius: 10
+              }}
+            >
+              <Text style={{ fontFamily: "Medium" }}>تغییر نوع نقشه</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() => this._setOriginMarker()}
               style={styles.OriginSelectorContainer}
             >
@@ -760,7 +813,6 @@ class HomeView extends Component {
             </TouchableOpacity>
           </View>
         );
-        break;
     }
   }
 }
@@ -819,15 +871,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 5,
     right: 10,
-    fontSize: 11,
-    fontWeight: "200"
+    fontSize: 11
   },
   Date2: {
     position: "absolute",
     bottom: 5,
     right: 10,
     fontSize: 11,
-    fontWeight: "200",
     color: "#fff"
   },
   ChatContainer: {
@@ -912,8 +962,7 @@ const styles = StyleSheet.create({
   },
   calendarPickerBtnTxt: {
     textAlign: "center",
-    fontSize: 14,
-    fontWeight: "700"
+    fontSize: 14
   },
   calendarSubmitBtn: {
     marginLeft: 5,
@@ -923,8 +972,7 @@ const styles = StyleSheet.create({
   },
   calendarSubmitBtnTxt: {
     color: "#ffffff",
-    fontSize: 12,
-    fontWeight: "600"
+    fontSize: 12
   },
   OriginSelectorContainer: {
     position: "absolute",
@@ -933,8 +981,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "bold"
+    fontSize: 18
   },
   PrimaryButton: {
     width: (width / 100) * 90,
@@ -947,8 +994,7 @@ const styles = StyleSheet.create({
   PrimaryButtonText: {
     textAlign: "center",
     color: "#fff",
-    fontSize: 16,
-    fontWeight: "700"
+    fontSize: 16
   },
   rateSubmitButton: {
     width: (width / 100) * 80,
@@ -961,8 +1007,7 @@ const styles = StyleSheet.create({
   rateSubmitButtonText: {
     textAlign: "center",
     color: "#2a2e43",
-    fontSize: 16,
-    fontWeight: "800"
+    fontSize: 16
   },
   rateContainer: {
     alignItems: "center",
@@ -992,7 +1037,6 @@ const styles = StyleSheet.create({
   submitBtnTxt: {
     color: "#ffffff",
     fontSize: 14,
-    fontWeight: "700",
     textAlign: "center"
   }
 });

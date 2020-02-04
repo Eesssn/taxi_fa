@@ -6,7 +6,7 @@ import {
   Image,
   Dimensions,
   AsyncStorage,
-    ActivityIndicator,
+  ActivityIndicator,
   StatusBar
 } from 'react-native';
 import axios from 'axios';
@@ -37,30 +37,42 @@ class App extends Component {
     }
   }
   componentDidMount(){
+    console.log("1")
     Font.loadAsync({
-      'Black':require('./assets/Fonts/IRANSansWeb_Black.ttf'),
       'Bold':require('./assets/Fonts/IRANSansWeb_Bold.ttf'),
       'Light':require('./assets/Fonts/IRANSansWeb_Light.ttf'),
       'Medium':require('./assets/Fonts/IRANSansWeb_Medium.ttf'),
       'UltraLight':require('./assets/Fonts/IRANSansWeb_UltraLight.ttf'),
       'Iran':require('./assets/Fonts/IRANSansWeb.ttf'),
     })
+    console.log("2")
     this.setState({
       isFontLoaded:true
     })
+    console.log("3")
   }
   componentWillMount() {
+    console.log("4")
     this.getMyValue()
   }
   getMyValue = async () => {
+    console.log("5")
     const passenger_id = await AsyncStorage.getItem('passenger_id');
+    console.log("6")
     const image = await AsyncStorage.getItem('image');
+    console.log("7")
     const token = await AsyncStorage.getItem('token');
+    console.log("8")
     const phone = await AsyncStorage.getItem('phone');
+    console.log("9")
     const name = await AsyncStorage.getItem('name');
+    console.log("10")
     const email = await AsyncStorage.getItem('email');
+    console.log("11")
     const logged = await AsyncStorage.getItem('logged');
+    console.log("12")
     const pushToken = await AsyncStorage.getItem('push_token');
+    console.log("13")
     this.setState({
       logged: logged,
       FullData: {
@@ -73,9 +85,12 @@ class App extends Component {
         push_token: pushToken,
       }
     });
+    console.log("14")
     if (token !== null && passenger_id !== null) {
+      console.log("15")
       this._CheckToken()
     } else {
+      console.log("16")
       this.setState({
         wasNotLogin: true
       });
@@ -83,15 +98,18 @@ class App extends Component {
     }
   };
   Status = (data) => {
+    console.log("17")
     this.statusFromServer()
   };
   statusFromServer = () => {
+    console.log("18")
     console.log("status");
     var that = this;
     axios.post('passenger/status', {
       passenger_id: that.state.FullData.passenger_id,
       token: that.state.FullData.token,
     }).then(function (response) {
+      console.log("19")
       if (response.data.is_successful) {
         if (response.data.data.has_trip === 1) {
           that.setState({
@@ -105,14 +123,17 @@ class App extends Component {
         }, 15000);
       }
     }).catch(function (err) {
+      console.log(err)
     })
   };
   _CheckToken = () => {
+    console.log("20")
     var that = this;
     axios.post('verify_token', {
       passenger_id: that.state.FullData.passenger_id,
       token: that.state.FullData.token,
     }).then(function (response) {
+      console.log("21")
       if (response.data.is_successful) {
         that.setState({
           loading: false,
@@ -124,18 +145,28 @@ class App extends Component {
         that.logout()
       }
     }).catch(function (err) {
+      console.warn(err)
     })
   };
   checkSend = async (data) => {
+    console.log("22")
     try{
       await AsyncStorage.setItem("token" , data.token)
+      console.log("23")
       await AsyncStorage.setItem("logged" , "1")
+      console.log("24")
       await AsyncStorage.setItem("passenger_id",data.passenger_id.toString())
+      console.log("25")
       if(data.image_url) await AsyncStorage.setItem("image",data.image_url)
+      console.log("26")
       await AsyncStorage.setItem("phone",data.phone_number)
+      console.log("27")
       await AsyncStorage.setItem("name",data.full_name)
+      console.log("28")
       if(data.email) await AsyncStorage.setItem("email",data.email)
+      console.log("29")
       if(data.referrer_code) await AsyncStorage.setItem("refferCode",data.referrer_code)
+      console.log("30")
     } catch (e) {
       console.log(e)
     }
@@ -168,6 +199,7 @@ class App extends Component {
     })
   };
   mago = () => {
+    console.log("31")
     this.setState({
       CanLogin: true
     });
@@ -176,6 +208,7 @@ class App extends Component {
       phone_number: this.state.LogPhone,
       password: this.state.LogPassword,
     }).then(function (response) {
+      console.log("32")
       if (response.data.is_successful === true) {
         AsyncStorage.setItem('isLoggedIn', '1');
         AsyncStorage.setItem('password', thiss.state.LogPassword);
@@ -192,6 +225,7 @@ class App extends Component {
         alert(response.data.message)
       }
     }).catch(function (error) {
+      console.warn(error)
       thiss.setState({
         CanLoginL: false
       });

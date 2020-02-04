@@ -45,12 +45,6 @@ class LeftMenuView extends Component {
                             صفحه اصلی
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.touchable} onPress={this.props.Transaction}>
-                        <Image source={require('../assets/Payment.png')} style={styles.image}  />
-                        <Text style={styles.text}>
-                            پرداخت ها
-                        </Text>
-                    </TouchableOpacity>
                     <TouchableOpacity style={styles.touchable} onPress={this.props.History}>
                         <Image source={require('../assets/History.png')} style={styles.image}  />
                         <Text style={styles.text}>

@@ -19,19 +19,15 @@ import { Audio } from "expo-av";
 import StarRating from "react-native-star-rating";
 import moment from "moment";
 import axios from "axios";
-import { Notifications } from "expo";
 import Pusher from "pusher-js/react-native";
 
 import HomeViewNew from "./HomeView";
-import TaxiArrived from "./TaxiArrived";
 import AppLoadingScreen from "./Loading";
-import CancelView from "./CancelView";
 import ShowDriver from "./ShowDriver";
 import CarDetail from "./CarDetail";
 import TopBar from "./TopBar";
 import registerForPushNotificationsAsync from "./PushFunctionality";
 import Modal from "react-native-modal";
-import { parse } from "react-native-svg";
 
 const getCurrentPosition = () => {
   return new Promise((resolve, reject) => {
@@ -55,7 +51,6 @@ class Home extends Component {
       cancelBeforeAccept: false,
       arrived: false,
       mainCounter: 0,
-      finishedCost: null,
       Page: "main",
       ShouldPlay: false,
       VoucherVal: "",
@@ -77,6 +72,7 @@ class Home extends Component {
       Region2: null,
       OriginCoordinates: null,
       voucherId: null,
+      onlinePaid:false,
       OriginName: null,
       DestinationName: null,
       oldData: null,
@@ -95,6 +91,7 @@ class Home extends Component {
       FromAddress: null,
       ToAddress: null,
       selectedFav: null,
+      cancelAfterAccept:false,
       TripIdFromServer: null,
       TripCodeFromServer: null,
       CancelCash: null,
@@ -983,30 +980,21 @@ class Home extends Component {
       Page: "seat"
     });
   };
-  _FinishTrip2 = data => {
-    let lol = JSON.stringify(data.final_price);
+  _FinishTrip2 = () => {
     this.PlaySound();
+    this.props.Status(true);
+    this.state.DriverLocationInterval.map(item => {
+      clearInterval(item);
+    });
     this.setState({
-      finishedCost: lol,
-      Page: "finish"
+      Page: "finish",
+      mainCounter: 0,
     });
   };
-  _FinishTrip = data => {
-    if (data.url) {
-      Linking.openURL(data.url);
-    } else {
-      this.setState({
-        mainCounter: 0
-      });
-      this.PlaySound();
-      this.state.DriverLocationInterval.map(item => {
-        clearInterval(item);
-      });
-      this.setState({
-        Page: "finish"
-      });
-      this.props.Status(true);
-    }
+  _FinishTrip = () => {
+    this.setState({
+      onlinePaid:true
+    });
   };
   getFavorites = () => {
     if (this.state.Token && this.state.passenger_id !== null) {
@@ -1565,8 +1553,7 @@ class Home extends Component {
                       textAlign: "center"
                     }}
                   >
-                    سفر به اتمام رسید. هزینه سفر: {this.state.finishedCost}{" "}
-                    تومان
+                    سفر به اتمام رسید.
                   </Text>
                 </View>
                 <View style={styles.rateContainer}>
@@ -1678,22 +1665,24 @@ class Home extends Component {
                     : this.props.oldData
                 }
               />
-              <TouchableOpacity
-                onPress={() => this.PayTrip()}
-                style={{
-                  backgroundColor: "#2a2e43",
-                  width: width - 80,
-                  alignSelf: "center",
-                  borderRadius: 100,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingVertical: 10
-                }}
-              >
-                <Text style={{ fontFamily: "Medium", color: "white" }}>
-                  پرداخت آنلاین
-                </Text>
-              </TouchableOpacity>
+              {this.state.onlinePaid ? null : (
+                <TouchableOpacity
+                  onPress={() => this.PayTrip()}
+                  style={{
+                    backgroundColor: "#2a2e43",
+                    width: width - 80,
+                    alignSelf: "center",
+                    borderRadius: 100,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingVertical: 10
+                  }}
+                >
+                  <Text style={{ fontFamily: "Medium", color: "white" }}>
+                    پرداخت آنلاین
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         );
@@ -1727,7 +1716,7 @@ class Home extends Component {
         );
         break;
       case "start":
-        let cancelAfterAccept = false;
+        var cancelAfterAccept = this.state.cancelAfterAccept
         return (
           <View style={styles.Container}>
             <Modal isVisible={this.state.arrivedModal}>
@@ -1800,9 +1789,13 @@ class Home extends Component {
                 >
                   مطمئنی ?
                 </Text>
+                <View style={{flexDirection:'row'}}>
                 <TouchableOpacity
                   onPress={() => {
                     this._TripCancel();
+                    this.setState({
+                      cancelAfterAccept:false
+                    })
                   }}
                   style={{
                     backgroundColor: "#2a2e43",
@@ -1825,7 +1818,9 @@ class Home extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    cancelAfterAccept = false;
+                    this.setState({
+                      cancelAfterAccept:false
+                    })
                   }}
                   style={{
                     backgroundColor: "white",
@@ -1846,6 +1841,7 @@ class Home extends Component {
                     خیر
                   </Text>
                 </TouchableOpacity>
+                </View>
               </View>
             </Modal>
             <ShowDriver
@@ -1871,7 +1867,7 @@ class Home extends Component {
               OriginCoordinates={this.state.OriginCoordinates}
               DestinationCoordinates={this.state.DestinationCoordinates}
               ShowMenu={() => this.setState({ Page: "menu" })}
-              cancel={() => (cancelAfterAccept = true)}
+              cancel={() => this.setState({cancelAfterAccept:true})}
               taxiArrived={() => this.setState({ Page: "seat" })}
             />
           </View>
@@ -2147,14 +2143,12 @@ const styles = StyleSheet.create({
     bottom: 5,
     right: 10,
     fontSize: 11,
-    fontWeight: "200"
   },
   Date2: {
     position: "absolute",
     bottom: 5,
     right: 10,
     fontSize: 11,
-    fontWeight: "200",
     color: "#fff"
   },
   ChatContainer: {
@@ -2237,7 +2231,6 @@ const styles = StyleSheet.create({
   calendarPickerBtnTxt: {
     textAlign: "center",
     fontSize: 14,
-    fontWeight: "700"
   },
   calendarSubmitBtn: {
     marginLeft: 5,
@@ -2248,7 +2241,6 @@ const styles = StyleSheet.create({
   calendarSubmitBtnTxt: {
     color: "#ffffff",
     fontSize: 12,
-    fontWeight: "600"
   },
   OriginSelectorContainer: {
     position: "absolute",
@@ -2269,7 +2261,6 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontSize: 18,
-    fontWeight: "bold"
   },
   PrimaryButton: {
     width: (width / 100) * 90,
@@ -2283,7 +2274,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fff",
     fontSize: 16,
-    fontWeight: "700"
   },
   rateSubmitButton: {
     width: (width / 100) * 80,
@@ -2297,7 +2287,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#2a2e43",
     fontSize: 16,
-    fontWeight: "800"
   },
   rateContainer: {
     alignItems: "center",
@@ -2327,7 +2316,6 @@ const styles = StyleSheet.create({
   submitBtnTxt: {
     color: "#ffffff",
     fontSize: 14,
-    fontWeight: "700",
     textAlign: "center"
   }
 });
